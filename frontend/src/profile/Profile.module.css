@@ -22,12 +22,16 @@
   }
 
   .homeBtn {
-    background-color: #1c681e;
+    background-color:#4CAF50;
     color: white;
     border: none;
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
+  }
+
+  .homeBtn:hover{
+    background-color: #1c681e;
   }
   
   .logoutBtn:hover {
