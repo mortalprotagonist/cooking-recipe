@@ -9,8 +9,10 @@ const Login = () => {
     password: ''
   });
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false); // Declare loading state
   const navigate = useNavigate();
-    const loginUser = async () => {
+
+  const loginUser = async () => {
     // **Basic Validation**
     if (!userData.email || !userData.password) {
       setErrorMessage('Email and password are required.');
@@ -31,8 +33,6 @@ const Login = () => {
     setLoading(true);
     setErrorMessage('');
 
-
-  const loginUser = async () => {
     try {
       const response = await axios.post('http://localhost:8082/login', userData);
 
@@ -45,6 +45,8 @@ const Login = () => {
     } catch (error) {
       console.error('Login error:', error);
       setErrorMessage('An error occurred while logging in. Please try again.');
+    } finally {
+      setLoading(false); // Ensure loading is reset after the request
     }
   };
 
@@ -66,7 +68,9 @@ const Login = () => {
           className={styles.userPasswordInput}
         />
         {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
-        <button className={styles.submitButton} onClick={loginUser}>Login</button>
+        <button className={styles.submitButton} onClick={loginUser} disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
 
         <Link to="/signup">
           <p className={styles.link}>Don't Have An Account? Signup now!</p>
