@@ -9,9 +9,30 @@ const Login = () => {
     password: ''
   });
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false); // Declare loading state
   const navigate = useNavigate();
 
   const loginUser = async () => {
+    // **Basic Validation**
+    if (!userData.email || !userData.password) {
+      setErrorMessage('Email and password are required.');
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // **Email regex pattern**
+    if (!emailPattern.test(userData.email)) {
+      setErrorMessage('Please enter a valid email address.');
+      return;
+    }
+
+    if (userData.password.length < 6) { // **Password length validation**
+      setErrorMessage('Password must be at least 6 characters long.');
+      return;
+    }
+
+    setLoading(true);
+    setErrorMessage('');
+
     try {
       const response = await axios.post('http://localhost:8082/login', userData);
 
@@ -24,6 +45,8 @@ const Login = () => {
     } catch (error) {
       console.error('Login error:', error);
       setErrorMessage('An error occurred while logging in. Please try again.');
+    } finally {
+      setLoading(false); // Ensure loading is reset after the request
     }
   };
 
@@ -45,7 +68,9 @@ const Login = () => {
           className={styles.userPasswordInput}
         />
         {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
-        <button className={styles.submitButton} onClick={loginUser}>Login</button>
+        <button className={styles.submitButton} onClick={loginUser} disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
 
         <Link to="/signup">
           <p className={styles.link}>Don't Have An Account? Signup now!</p>
