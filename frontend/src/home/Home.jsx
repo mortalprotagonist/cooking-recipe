@@ -53,6 +53,7 @@ const Home = () => {
       setRecipes([...recipes, response.data]);
       setShowModal(false);
       setNewRecipe({ title: '', description: '', ingredients: '' });
+      window.location.reload();
     } catch (error) {
       console.error('Error adding recipe:', error);
     }

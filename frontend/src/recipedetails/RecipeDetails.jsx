@@ -51,6 +51,7 @@ const RecipeDetails = () => {
       });
       setComments((prev) => [...prev, response.data]); 
       setNewComment('');
+      window.location.reload();
     } catch (error) {
       console.error("Error adding comment:", error);
     }

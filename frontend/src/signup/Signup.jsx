@@ -14,7 +14,6 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const registerUser = async () => {
-    // **Basic Validation**
     if (!userData.email || !userData.password) {
       setErrorMessage('Email and password are required.');
       return;
