@@ -13,22 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const loginUser = async () => {
-    // **Basic Validation**
-    if (!userData.email || !userData.password) {
-      setErrorMessage('Email and password are required.');
-      return;
-    }
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // **Email regex pattern**
-    if (!emailPattern.test(userData.email)) {
-      setErrorMessage('Please enter a valid email address.');
-      return;
-    }
-
-    if (userData.password.length < 6) { // **Password length validation**
-      setErrorMessage('Password must be at least 6 characters long.');
-      return;
-    }
+    
 
     setLoading(true);
     setErrorMessage('');

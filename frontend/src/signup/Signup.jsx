@@ -9,10 +9,27 @@ const Signup = () => {
     email: '',
     password: ''
   });
+  
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const registerUser = async () => {
+    // **Basic Validation**
+    if (!userData.email || !userData.password) {
+      setErrorMessage('Email and password are required.');
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(userData.email)) {
+      setErrorMessage('Please enter a valid email address.');
+      return;
+    }
+
+    if (userData.password.length < 6) {
+      setErrorMessage('Password must be at least 6 characters long.');
+      return;
+    }
     try {
     const response = await axios.post('http://localhost:8082/signup', userData);
 
