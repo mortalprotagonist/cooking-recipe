@@ -14,40 +14,31 @@ const Profile = () => {
     
     if (!storedUser) {
       console.error('User not found');
-      alert('Login to continue...')
+      alert('Login to continue...');
       navigate('/login'); 
       return;
     }
   
     setUser(storedUser); 
   
-    const fetchUserRecipes = async () => {
+    const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8082/user-recipes?userId=${storedUser.id}`);
-        setRecipes(response.data); 
+        const [recipesResponse, favoritesResponse] = await Promise.all([
+          axios.get(`http://localhost:8082/user-recipes?userId=${storedUser.id}`),
+          axios.get(`http://localhost:8082/favorites?userId=${storedUser.id}`)
+        ]);
+        
+        setRecipes(recipesResponse.data);
+        setFavorites(favoritesResponse.data);
       } catch (error) {
-        console.error('Error fetching user recipes:', error);
-        alert('Failed to fetch recipes. Please try again later.');
+        console.error('Error fetching data:', error);
+        alert('Failed to fetch data. Please try again later.');
       }
     };
-  
-    const fetchUserFavorites = async () => {
-        const storedUser = JSON.parse(localStorage.getItem('user'));
-        if (!storedUser) return;
-    
-        try {
-            const response = await axios.get(`http://localhost:8082/favorites?userId=${storedUser.id}`);
-            setFavorites(response.data);
-        } catch (error) {
-            console.error('Error fetching user favorites:', error);
-        }
-    };
-    
-  
-    fetchUserRecipes();
-    fetchUserFavorites();
-  }, []); 
-  
+
+    fetchUserData();
+  }, [navigate]);
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     navigate('/');
@@ -57,7 +48,7 @@ const Profile = () => {
     navigate(`/recipe/${id}`);
   };
 
-  const handleHome =()=>{
+  const handleHome = () => {
     navigate('/');
   };
 
@@ -71,10 +62,8 @@ const Profile = () => {
 
     try {
       await axios.delete('http://localhost:8082/favorites', {
-        data: { userId: storedUser.id, recipeId: recipeId }
+        data: { userId: storedUser.id, recipeId }
       });
-
-      window.location.reload();
 
       setFavorites((prevFavorites) =>
         prevFavorites.filter((favorite) => favorite.recipe_id !== recipeId)
@@ -83,13 +72,15 @@ const Profile = () => {
       alert("Recipe removed from favorites!");
     } catch (error) {
       console.error("Error removing from favorites:", error);
+      alert("Failed to remove favorite. Please try again.");
     }
   };
 
   const renderRecipeList = (recipeList, isFavoriteList) => {
     if (recipeList.length === 0) {
-      return <p>You have not added any recipes yet.</p>;
+      return <p>{isFavoriteList ? 'You have no favorite recipes yet.' : 'You have not added any recipes yet.'}</p>;
     }
+
     return (
       <div className={styles.recipeList}>
         {recipeList.map((recipe) => (
@@ -97,7 +88,7 @@ const Profile = () => {
             <h3>{recipe.title}</h3>
             <button className={styles.viewBtn} onClick={() => viewRecipe(recipe.id)}>View Recipe</button>
             {isFavoriteList && (
-              <button className={styles.removeBtn} onClick={() => removeFavorite(recipe.id)}>Remove</button>
+              <button className={styles.removeBtn} onClick={() => removeFavorite(recipe.recipe_id)}>Remove</button>
             )}
           </div>
         ))}
@@ -112,7 +103,7 @@ const Profile = () => {
   return (
     <div className={styles.profileContainer}>
       <header className={styles.header}>
-      <button onClick={handleHome} className={styles.homeBtn}>Home</button>
+        <button onClick={handleHome} className={styles.homeBtn}>Home</button>
         <button onClick={handleLogout} className={styles.logoutBtn}>Logout</button>
       </header>
       <h1>Welcome, {user.name}!</h1>    
