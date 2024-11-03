@@ -9,7 +9,7 @@ const Login = () => {
     password: ''
   });
   const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(false); // Declare loading state
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const loginUser = async () => {
@@ -31,13 +31,15 @@ const Login = () => {
       console.error('Login error:', error);
       setErrorMessage('An error occurred while logging in. Please try again.');
     } finally {
-      setLoading(false); // Ensure loading is reset after the request
+      setLoading(false); 
     }
   };
 
   return (
     <div className={styles.mainContainer}>
+      <h1 className={styles.pageHeading}>Cooking Recipes</h1>
       <div className={styles.formContainer}>
+        <h2>Hey Chef!</h2>
         <input
           type="email"
           required
