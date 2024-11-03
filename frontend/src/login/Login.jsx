@@ -9,26 +9,11 @@ const Login = () => {
     password: ''
   });
   const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(false); // Declare loading state
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const loginUser = async () => {
-    // **Basic Validation**
-    if (!userData.email || !userData.password) {
-      setErrorMessage('Email and password are required.');
-      return;
-    }
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // **Email regex pattern**
-    if (!emailPattern.test(userData.email)) {
-      setErrorMessage('Please enter a valid email address.');
-      return;
-    }
-
-    if (userData.password.length < 6) { // **Password length validation**
-      setErrorMessage('Password must be at least 6 characters long.');
-      return;
-    }
+    
 
     setLoading(true);
     setErrorMessage('');
@@ -46,13 +31,15 @@ const Login = () => {
       console.error('Login error:', error);
       setErrorMessage('An error occurred while logging in. Please try again.');
     } finally {
-      setLoading(false); // Ensure loading is reset after the request
+      setLoading(false); 
     }
   };
 
   return (
     <div className={styles.mainContainer}>
+      <h1 className={styles.pageHeading}>Cooking Recipes</h1>
       <div className={styles.formContainer}>
+        <h2>Hey Chef!</h2>
         <input
           type="email"
           required
