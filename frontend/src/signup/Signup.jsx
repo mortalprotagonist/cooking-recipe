@@ -49,7 +49,9 @@ const Signup = () => {
 
   return (
     <div className={styles.mainContainer}>
+            <h1 className={styles.pageHeading}>Cooking Recipes</h1>
       <div className={styles.formContainer}>
+      <h2>Hey Chef!..</h2>
         <input
           type="text"
           required
